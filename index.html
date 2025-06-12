@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G&D Donuts</title>
+  <style>
+    body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #F59C9A; color: #333; }
+    header { text-align: center; padding: 20px; background-color: #fff; }
+    header img { max-width: 150px; }
+    h1 { font-family: "Milky Vintage", sans-serif; color: #d6336c; margin-top: 10px; }
+    .tabs { display: flex; justify-content: center; gap: 20px; background: #fff; padding: 10px 0; }
+    .tab { cursor: pointer; padding: 10px 20px; border-radius: 8px; background: #d6336c; color: #fff; }
+    .tab.active { background: #fff; color: #d6336c; border: 2px solid #d6336c; }
+    .content { display: none; padding: 20px; background: #fff; margin: 10px; border-radius: 8px; }
+    .content.active { display: block; }
+    label, select, input[type=checkbox] { display: block; margin-top: 10px; }
+    button { margin-top: 20px; padding: 10px 20px; background: #d6336c; color: #fff; border: none; border-radius: 8px; cursor: pointer; width: 100%; }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <img src="PUT_URL_OF_YOUR_LOGO_HERE" alt="G&D Donuts Logo">
+    <h1 style="font-family: 'Pacifico', cursive;">G&D Donuts</h1>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('glaseadas')">Donas Glaseadas</div>
+    <div class="tab" onclick="showTab('nobanhadas')">Donas No Bañadas</div>
+  </div>
+
+  <div id="glaseadas" class="content active">
+    <h2>Donas Glaseadas</h2>
+    <label>Baño:
+      <select id="bañoGlaseadas">
+        <option value="Chocolate Blanco">Chocolate Blanco</option>
+        <option value="Chocolate Negro">Chocolate Negro</option>
+      </select>
+    </label>
+    <label><input type="checkbox" value="M&M"> M&M</label>
+    <label><input type="checkbox" value="Jumbo Blanco"> Jumbo Blanco</label>
+    <label><input type="checkbox" value="Galleta Oreo"> Galleta Oreo</label>
+    <label><input type="checkbox" value="Masmelo"> Masmelo</label>
+    <label><input type="checkbox" value="Piazza"> Piazza</label>
+    <label><input type="checkbox" value="Chocolate Gol"> Chocolate Gol</label>
+
+    <label>Relleno (+$500):
+      <select id="rellenoGlaseadas">
+        <option value="Sin relleno">Sin relleno</option>
+        <option value="Chocolate Blanco">Chocolate Blanco</option>
+        <option value="Chocolate Negro">Chocolate Negro</option>
+        <option value="Chantilly">Chantilly</option>
+        <option value="Arequipe">Arequipe</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="nobanhadas" class="content">
+    <h2>Donas No Bañadas</h2>
+    <label>Salsa:
+      <select id="salsaNobanhadas">
+        <option value="Arequipe">Arequipe</option>
+        <option value="Chocolate">Chocolate</option>
+      </select>
+    </label>
+    <label><input type="checkbox" value="Fresas"> Fresas</label>
+    <label><input type="checkbox" value="Oreo"> Oreo</label>
+    <label><input type="checkbox" value="Chocolates chiquitos"> Chocolates chiquitos</label>
+
+    <label>Relleno (+$500):
+      <select id="rellenoNobanhadas">
+        <option value="Sin relleno">Sin relleno</option>
+        <option value="Chocolate Blanco">Chocolate Blanco</option>
+        <option value="Chocolate Negro">Chocolate Negro</option>
+        <option value="Chantilly">Chantilly</option>
+        <option value="Arequipe">Arequipe</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="content active">
+    <label>Presentación:
+      <select id="presentacion">
+        <option value="Individual">Individual</option>
+        <option value="Caja x4">Caja x4</option>
+        <option value="Caja x6">Caja x6</option>
+        <option value="Caja x8">Caja x8</option>
+        <option value="Caja x9">Caja x9</option>
+        <option value="Caja x12">Caja x12</option>
+        <option value="Caja x14">Caja x14</option>
+      </select>
+    </label>
+  </div>
+
+  <button onclick="enviarPedido()">Enviar Pedido por WhatsApp</button>
+
+  <script>
+    function showTab(tab) {
+      document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
+      document.getElementById(tab).classList.add('active');
+      document.querySelector(`.tab[onclick="showTab('${tab}')"]`).classList.add('active');
+    }
+
+    function enviarPedido() {
+      const presentacion = document.getElementById("presentacion").value;
+      const baño = document.getElementById("bañoGlaseadas").value;
+      const salsa = document.getElementById("salsaNobanhadas").value;
+      const rellenoG = document.getElementById("rellenoGlaseadas").value;
+      const rellenoN = document.getElementById("rellenoNobanhadas").value;
+
+      const glaseToppings = Array.from(document.querySelectorAll("#glaseadas input:checked")).map(e => e.value);
+      const noGlaseToppings = Array.from(document.querySelectorAll("#nobanhadas input:checked")).map(e => e.value);
+
+      let mensaje = `Hola! Quiero pedir:\nPresentación: ${presentacion}`;
+
+      if(glaseToppings.length || rellenoG !== 'Sin relleno') {
+        mensaje += `\n\n🍩 Donas Glaseadas (Baño ${baño})`;
+        if(glaseToppings.length) mensaje += `\nToppings: ${glaseToppings.join(", ")}`;
+        if(rellenoG !== 'Sin relleno') mensaje += `\nRelleno: ${rellenoG} (+$500 c/u)`;
+      }
+
+      if(noGlaseToppings.length || rellenoN !== 'Sin relleno') {
+        mensaje += `\n\n🍩 Donas No Bañadas (Salsa ${salsa})`;
+        if(noGlaseToppings.length) mensaje += `\nToppings: ${noGlaseToppings.join(", ")}`;
+        if(rellenoN !== 'Sin relleno') mensaje += `\nRelleno: ${rellenoN} (+$500 c/u)`;
+      }
+
+      window.open(`https://wa.me/573183910014?text=${encodeURIComponent(mensaje)}`);
+    }
+  </script>
+</body>
+</html>
